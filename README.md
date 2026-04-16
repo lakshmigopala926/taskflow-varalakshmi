@@ -1,70 +1,187 @@
-# Getting Started with Create React App
+# Taskflow Project
+# 🚀 TaskFlow – Full Stack Task Management App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 📌 Overview
 
-## Available Scripts
+TaskFlow is a full-stack task management application that allows users to create projects and manage tasks efficiently.
+Built using **React (Frontend)**, **Go with Gin (Backend)**, and **PostgreSQL (Database)**.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🛠️ Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Frontend
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* React.js
+* JavaScript (ES6)
+* Fetch API
 
-### `npm test`
+### Backend
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* Go (Golang)
+* Gin Framework
+* JWT Authentication
 
-### `npm run build`
+### Database
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* PostgreSQL
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## ✨ Features
 
-### `npm run eject`
+* 🔐 User Login (JWT Authentication)
+* 📁 Create & View Projects
+* 📝 Add Tasks to Projects
+* 📋 View Tasks by Project
+* 🔄 REST API Integration
+* 🌐 Full-stack integration (Frontend + Backend)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 📂 Project Structure
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+taskflow/
+│
+├── backend/
+│   ├── main.go
+│   ├── db.go
+│   ├── schema.go
+│   ├── project.go
+│   ├── task.go
+│   ├── auth.go
+│   └── middleware.go
+│
+├── frontend/
+│   ├── src/
+│   │   └── App.js
+│   └── package.json
+│
+└── README.md
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## ⚙️ Setup Instructions
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 🔹 Backend Setup
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Navigate to backend folder:
 
-### Code Splitting
+```bash
+cd backend
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+2. Install dependencies:
 
-### Analyzing the Bundle Size
+```bash
+go mod tidy
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+3. Run server:
 
-### Making a Progressive Web App
+```bash
+go run .
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+4. Backend runs on:
 
-### Advanced Configuration
+```
+http://localhost:8080
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+### 🔹 Frontend Setup
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+1. Navigate to frontend folder:
 
-### `npm run build` fails to minify
+```bash
+cd frontend
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Start app:
+
+```bash
+npm start
+```
+
+4. Frontend runs on:
+
+```
+http://localhost:3000
+```
+
+---
+
+## 🔗 API Endpoints
+
+| Method | Endpoint            | Description      |
+| ------ | ------------------- | ---------------- |
+| GET    | /health             | Check server     |
+| POST   | /login              | User login       |
+| POST   | /projects           | Create project   |
+| GET    | /projects           | Get all projects |
+| POST   | /projects/:id/tasks | Create task      |
+| GET    | /projects/:id/tasks | Get tasks        |
+
+---
+
+## 🔐 Authentication
+
+* Uses JWT Token
+* Token must be sent in headers:
+
+```
+Authorization: <your_token>
+```
+
+---
+
+## 🚀 Deployment
+
+* Frontend: Vercel
+* Backend: Render / Railway
+
+---
+
+## 📸 Screenshots
+
+![alt text](image.png)
+![alt text](image-1.png)
+
+---
+
+## 💼 Resume Highlight
+
+> Built a full-stack Task Management application using React, Go (Gin), and PostgreSQL with JWT authentication and REST APIs.
+
+---
+
+## 🙌 Future Improvements
+
+* ✅ Task status update (Todo → Done)
+* 🗑️ Delete project/task
+* 🎨 UI enhancements (Bootstrap / Tailwind)
+* 👤 User registration system
+
+---
+
+## 📬 Contact
+
+**Name:** Varalakshmi Gopala
+📧 Email: [varalakshmigopala79@gmail.com](mailto:varalakshmigopala79@gmail.com)
+🔗 LinkedIn: https://linkedin.com/in/varalakshmigopala1826
+
+---
+
+⭐ If you like this project, give it a star on GitHub!
+
+
