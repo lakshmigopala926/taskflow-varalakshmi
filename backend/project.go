@@ -6,57 +6,58 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CreateProjectInput struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-
 func CreateProject(c *gin.Context) {
-	var input CreateProjectInput
+	var input struct {
+		Name string `json:"name"`
+	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid input"})
+		c.JSON(400, gin.H{"error": "invalid"})
 		return
 	}
 
-	userID, _ := c.Get("user_id")
+	if input.Name == "" {
+		c.JSON(400, gin.H{"error": "name required"})
+		return
+	}
 
-	var id string
-	err := DB.QueryRow(
-		"INSERT INTO projects (name,description,owner_id) VALUES ($1,$2,$3) RETURNING id",
-		input.Name, input.Description, userID,
-	).Scan(&id)
-
+	_, err := DB.Exec("INSERT INTO projects (name) VALUES (?)", input.Name)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed"})
+		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"id": id})
+	c.JSON(200, gin.H{"message": "project created"})
 }
 
 func GetProjects(c *gin.Context) {
-	userID, _ := c.Get("user_id")
-
-	rows, err := DB.Query("SELECT id,name,description FROM projects WHERE owner_id=$1", userID)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed"})
-		return
-	}
+	rows, _ := DB.Query("SELECT id, name FROM projects")
 	defer rows.Close()
 
 	var projects []gin.H
 
 	for rows.Next() {
-		var id, name, desc string
-		rows.Scan(&id, &name, &desc)
+		var id int
+		var name string
+		rows.Scan(&id, &name)
 
 		projects = append(projects, gin.H{
-			"id":          id,
-			"name":        name,
-			"description": desc,
+			"id":   id,
+			"name": name,
 		})
 	}
 
 	c.JSON(http.StatusOK, gin.H{"projects": projects})
 }
+func DeleteProject(c *gin.Context) {
+	id := c.Param("id")
+
+	_, err := DB.Exec("DELETE FROM projects WHERE id=?", id)
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "project deleted"})
+}
+

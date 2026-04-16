@@ -3,26 +3,17 @@ package main
 import (
 	"database/sql"
 	"log"
-	"os"
 
-	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var DB *sql.DB
 
 func InitDB() {
-	connStr := os.Getenv("DATABASE_URL")
-
 	var err error
-	DB, err = sql.Open("postgres", connStr)
+	DB, err = sql.Open("sqlite3", "./taskflow.db")
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	err = DB.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Println("Connected to database")
+	log.Println("DB connected")
 }

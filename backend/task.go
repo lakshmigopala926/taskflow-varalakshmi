@@ -1,90 +1,55 @@
 package main
 
-import (
-	"net/http"
-
-	"github.com/gin-gonic/gin"
-)
-
-type CreateTaskInput struct {
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Priority    string `json:"priority"`
-}
+import "github.com/gin-gonic/gin"
 
 func CreateTask(c *gin.Context) {
-	projectID := c.Param("id")
+	id := c.Param("id")
 
-	var input CreateTaskInput
-
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid input"})
-		return
+	var input struct {
+		Title string `json:"title"`
 	}
 
-	var id string
-	err := DB.QueryRow(
-		"INSERT INTO tasks (title,description,priority,project_id) VALUES ($1,$2,$3,$4) RETURNING id",
-		input.Title, input.Description, input.Priority, projectID,
-	).Scan(&id)
+	c.ShouldBindJSON(&input)
 
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed"})
-		return
-	}
+	DB.Exec("INSERT INTO tasks(title,project_id) VALUES(?,?)", input.Title, id)
 
-	c.JSON(http.StatusCreated, gin.H{"id": id})
+	c.JSON(200, gin.H{"message": "task created"})
 }
 
 func GetTasks(c *gin.Context) {
-	projectID := c.Param("id")
+	id := c.Param("id")
 
-	rows, err := DB.Query("SELECT id,title,status FROM tasks WHERE project_id=$1", projectID)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed"})
-		return
-	}
-	defer rows.Close()
+	rows, _ := DB.Query("SELECT id,title,status FROM tasks WHERE project_id=?", id)
 
 	var tasks []gin.H
 
 	for rows.Next() {
-		var id, title, status string
-		rows.Scan(&id, &title, &status)
+		var tid int
+		var title, status string
+
+		rows.Scan(&tid, &title, &status)
 
 		tasks = append(tasks, gin.H{
-			"id":     id,
-			"title":  title,
+			"id": tid,
+			"title": title,
 			"status": status,
 		})
 	}
 
-	c.JSON(http.StatusOK, gin.H{"tasks": tasks})
+	c.JSON(200, gin.H{"tasks": tasks})
 }
 
 func UpdateTask(c *gin.Context) {
 	id := c.Param("id")
+	DB.Exec("UPDATE tasks SET status='done' WHERE id=?", id)
 
-	var input map[string]interface{}
-	c.ShouldBindJSON(&input)
-
-	_, err := DB.Exec("UPDATE tasks SET status=$1 WHERE id=$2", input["status"], id)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "update failed"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"message": "updated"})
+	c.JSON(200, gin.H{"message": "updated"})
 }
 
 func DeleteTask(c *gin.Context) {
 	id := c.Param("id")
+	DB.Exec("DELETE FROM tasks WHERE id=?", id)
 
-	_, err := DB.Exec("DELETE FROM tasks WHERE id=$1", id)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "delete failed"})
-		return
-	}
-
-	c.Status(http.StatusNoContent)
+	c.JSON(200, gin.H{"message": "deleted"})
 }
+
