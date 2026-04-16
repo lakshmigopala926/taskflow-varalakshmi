@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"time"
+	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -37,5 +39,10 @@ func main() {
 	r.PATCH("/tasks/:id", UpdateTask)
 	r.DELETE("/tasks/:id", DeleteTask)
 
-	r.Run(":8080")
+	port := os.Getenv("PORT")
+if port == "" {
+	port = "8080"
+}
+
+r.Run(":" + port)
 }
